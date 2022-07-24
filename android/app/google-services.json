@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945225503123",
+    "project_id": "koen-96970",
+    "storage_bucket": "koen-96970.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945225503123:android:07d61644b9dcced2599866",
+        "android_client_info": {
+          "package_name": "com.example.flutter_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945225503123-69fn88ghfnu99lf4bfr6p9om7e95kmgv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv-7bGlwjOuxaPEPE1dsDjcubaq7ROL4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945225503123-69fn88ghfnu99lf4bfr6p9om7e95kmgv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

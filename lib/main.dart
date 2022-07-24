@@ -1,12 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/view/screen.dart';
+import 'package:flutter_dev/view/start_up/login_page.dart';
+import 'package:flutter_dev/view/time_line/time_line_page.dart';
 
-// import 'app.dart';
-import '/screen/Mutter.dart';
-import '/screen/PrivateChat.dart';
-import '/screen/GroupChat.dart';
-import '/screen/Setting.dart';
-
-void main() => runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,53 +16,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyStatefulWidget(),
+      home: const LoginPage(),
     );
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
-
-  @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  static const _screens = [
-    MutterScreen(),
-    PrivateChatScreen(),
-    GroupChatScreen(),
-    SettingScreen()
-  ];
-
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: _screens[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'つぶやき'),
-            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Pチャット'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.group), label: 'Gチャット'),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: '設定'),
-          ],
-          type: BottomNavigationBarType.fixed,
-        ));
   }
 }

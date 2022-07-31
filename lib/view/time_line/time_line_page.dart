@@ -22,7 +22,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('タイムライン'),
+        title: const Text('つぶやき投稿'),
         elevation: 2,
       ),
       body: StreamBuilder<QuerySnapshot>(

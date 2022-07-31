@@ -6,6 +6,7 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
+import 'package:flutter_dev/view/start_up/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditAccountPage extends StatefulWidget {
@@ -117,6 +118,31 @@ class _EditAccountPageState extends State<EditAccountPage> {
                     }
                   },
                   child: Text('更新')
+              ),
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () {
+                  Authentication.signOut();
+                  while(Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (context) => const LoginPage()));
+                },
+                child: Text('ログアウト')
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+                onPressed: () {
+                  UserFirestore.deleteUser(myAccount.id);
+                  Authentication.deleteAuth();
+                  while(Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (context) => const LoginPage()));
+                },
+                child: Text('アカウント削除')
               )
             ],
           ),

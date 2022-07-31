@@ -8,10 +8,13 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
+import 'package:flutter_dev/view/screen.dart';
+import 'package:flutter_dev/view/start_up/check_email_page.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({Key? key}) : super(key: key);
+  final bool isSignInWithGoogle;
+  CreateAccountPage({this.isSignInWithGoogle = false});
 
   @override
   State<CreateAccountPage> createState() => _CreateAccountPageState();
@@ -74,22 +77,26 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: InputDecoration(hintText: '自己紹介'),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Container(
-                  width: 300,
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(hintText: 'メールアドレス'),
+              widget.isSignInWithGoogle ? Container() : Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Container(
+                      width: 300,
+                      child: TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(hintText: 'メールアドレス'),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                width: 300,
-                child: TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(hintText: 'パスワード'),
-                ),
+                  Container(
+                    width: 300,
+                    child: TextField(
+                      controller: passwordController,
+                      decoration: const InputDecoration(hintText: 'パスワード'),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 50),
               ElevatedButton(
@@ -97,23 +104,22 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   if(nameController.text.isNotEmpty
                       && userIdController.text.isNotEmpty
                       && selfIntroductionController.text.isNotEmpty
-                      && emailController.text.isNotEmpty
-                      && passwordController.text.isNotEmpty
                       && image != null
                       ) {
+                    if(widget.isSignInWithGoogle) {
+                      var _result = await createAccount(Authentication.currentFirebaseUser!.uid);
+                      if(_result == true) {
+                        await UserFirestore.getUser(Authentication.currentFirebaseUser!.uid);
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
+                      }
+                    }
                     var result = await Authentication.signUp(email: emailController.text, password: passwordController.text);
                     if(result is UserCredential) {
-                      String imagePath = await FunctionUtils.uploadImage(result.user!.uid, image!);
-                      Account newAccount = Account(
-                        id: result.user!.uid,
-                        name: nameController.text,
-                        imagePath: imagePath,
-                        selfIntroduction: selfIntroductionController.text,
-                        userId: userIdController.text,
-                      );
-                      var _result = await UserFirestore.setUser(newAccount);
+                      var _result = await createAccount(result.user!.uid);
                       if(_result == true) {
-                        Navigator.pop(context);
+                        result.user!.sendEmailVerification();
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckEmailPage(email: emailController.text, pass: passwordController.text)));
                       }
                     }
                   }
@@ -125,5 +131,18 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> createAccount(String uid) async{
+    String imagePath = await FunctionUtils.uploadImage(uid, image!);
+    Account newAccount = Account(
+      id: uid,
+      name: nameController.text,
+      imagePath: imagePath,
+      selfIntroduction: selfIntroductionController.text,
+      userId: userIdController.text,
+    );
+    var _result = await UserFirestore.setUser(newAccount);
+    return _result;
   }
 }

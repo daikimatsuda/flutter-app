@@ -26,7 +26,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
         elevation: 2,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: PostFirestore.posts.snapshots(),
+        stream: PostFirestore.posts.orderBy('created_time',descending: true).snapshots(),
         builder: (context, postSnapshot) {
           if(postSnapshot.hasData) {
             List<String> postAccountIds = [];

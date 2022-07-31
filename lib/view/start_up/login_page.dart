@@ -6,6 +6,7 @@ import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/account/create_account_page.dart';
 import 'package:flutter_dev/view/screen.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextSpan(text: 'こちら',
                       style: const TextStyle(color: Colors.blue),
                       recognizer: TapGestureRecognizer()..onTap = () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccountPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateAccountPage()));
                       }
                     ),
                   ]
@@ -76,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   }
                 }, child: const Text('emailでログイン')
-              )
+              ),
             ],
           ),
         ),

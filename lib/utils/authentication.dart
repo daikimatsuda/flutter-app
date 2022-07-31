@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dev/model/account.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Authentication {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -28,4 +29,13 @@ class Authentication {
       return false;
     }
   }
+
+  static Future<void> signOut() async{
+    await _firebaseAuth.signOut();
+  }
+
+  static Future<void> deleteAuth() async{
+    await currentFirebaseUser!.delete();
+  }
+
 }

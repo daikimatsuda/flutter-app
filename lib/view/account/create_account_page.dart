@@ -1,21 +1,16 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
-import 'package:flutter_dev/view/screen.dart';
 import 'package:flutter_dev/view/start_up/check_email_page.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CreateAccountPage extends StatefulWidget {
-  final bool isSignInWithGoogle;
-  CreateAccountPage({this.isSignInWithGoogle = false});
-
+  const CreateAccountPage({Key? key}) : super(key: key);
   @override
   State<CreateAccountPage> createState() => _CreateAccountPageState();
 }
@@ -37,7 +32,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           width: double.infinity,
           child: Column(
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               GestureDetector(
                 onTap: () async {
                   var result = await FunctionUtils.getImageFromGallery();
@@ -50,14 +45,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 child: CircleAvatar(
                   foregroundImage: image == null ? null : FileImage(image!),
                   radius: 40,
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ),
               Container(
                 width: 300,
                 child: TextField(
                   controller: nameController,
-                  decoration: InputDecoration(hintText: '名前'),
+                  decoration: const InputDecoration(hintText: '名前'),
                 ),
               ),
               Padding(
@@ -66,7 +61,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   width: 300,
                   child: TextField(
                     controller: userIdController,
-                    decoration: InputDecoration(hintText: 'ユーザーID'),
+                    decoration: const InputDecoration(hintText: 'ユーザーID'),
                   ),
                 ),
               ),
@@ -77,26 +72,22 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: InputDecoration(hintText: '自己紹介'),
                 ),
               ),
-              widget.isSignInWithGoogle ? Container() : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Container(
-                      width: 300,
-                      child: TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(hintText: 'メールアドレス'),
-                      ),
-                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Container(
+                  width: 300,
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(hintText: 'メールアドレス'),
                   ),
-                  Container(
-                    width: 300,
-                    child: TextField(
-                      controller: passwordController,
-                      decoration: const InputDecoration(hintText: 'パスワード'),
-                    ),
-                  ),
-                ],
+                ),
+              ),
+              Container(
+                width: 300,
+                child: TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(hintText: 'パスワード'),
+                ),
               ),
               const SizedBox(height: 50),
               ElevatedButton(
@@ -106,14 +97,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       && selfIntroductionController.text.isNotEmpty
                       && image != null
                       ) {
-                    if(widget.isSignInWithGoogle) {
-                      var _result = await createAccount(Authentication.currentFirebaseUser!.uid);
-                      if(_result == true) {
-                        await UserFirestore.getUser(Authentication.currentFirebaseUser!.uid);
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
-                      }
-                    }
                     var result = await Authentication.signUp(email: emailController.text, password: passwordController.text);
                     if(result is UserCredential) {
                       var _result = await createAccount(result.user!.uid);

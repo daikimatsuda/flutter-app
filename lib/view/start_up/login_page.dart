@@ -3,10 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
-import 'package:flutter_dev/view/account/account_page.dart';
+// import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/account/create_account_page.dart';
 import 'package:flutter_dev/view/screen.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -70,10 +69,14 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () async{
                   var result = await Authentication.emailSignIn(email: emailController.text, password: passwordController.text);
                   if(result is UserCredential) {
-                    // ログイン成功した場合、ユーザー情報をFirebaseから取得
-                    var _result = await UserFirestore.getUser(result.user!.uid);
-                    if(_result == true) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
+                    if(result.user!.emailVerified == true) {
+                      // ログイン成功した場合、ユーザー情報をFirebaseから取得
+                      var _result = await UserFirestore.getUser(result.user!.uid);
+                      if(_result == true) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
+                      }
+                    } else {
+                      print('メール認証できていません');
                     }
                   }
                 }, child: const Text('emailでログイン')

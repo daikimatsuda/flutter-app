@@ -7,6 +7,7 @@ import 'package:flutter_dev/utils/firestore/posts.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/time_line/post_page.dart';
 import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
 
 class TimeLinePage extends StatefulWidget {
   const TimeLinePage({Key? key}) : super(key: key);
@@ -43,6 +44,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
                   return ListView.builder(
                     itemCount: postSnapshot.data!.docs.length,
                     itemBuilder: (context,index) {
+                      bool isLiked = false;
                       Map<String, dynamic> data = postSnapshot.data!.docs[index].data() as Map<String, dynamic>;
                       Post post = Post(
                           id: postSnapshot.data!.docs[index].id,
@@ -60,7 +62,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
                               bottom: BorderSide(color: Colors.grey,width: 0),
                             )
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Row(
                           children: [
                             CircleAvatar(
@@ -69,6 +71,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
                             ),
                             Expanded(
                               child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -84,7 +87,20 @@ class _TimeLinePageState extends State<TimeLinePage> {
                                         Text(DateFormat('M/d/yy').format(post.createdTime!.toDate()))
                                       ],
                                     ),
-                                    Text(post.content)
+                                    SizedBox(height: 2.5,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(post.content),
+                                        LikeButton(
+                                          likeCount: null,
+                                          isLiked: isLiked,
+                                          size: 25,
+                                          bubblesSize: 1,
+                                          circleColor: const CircleColor(start: Colors.grey, end: Colors.pinkAccent),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -102,7 +118,6 @@ class _TimeLinePageState extends State<TimeLinePage> {
           } else {
             return Container();
           }
-
         }
       ),
     );

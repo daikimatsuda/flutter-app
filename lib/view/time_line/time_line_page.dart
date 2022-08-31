@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/model/post.dart';
+import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/posts.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/time_line/post_page.dart';
@@ -93,13 +94,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(post.content),
-                                        LikeButton(
-                                          likeCount: null,
-                                          isLiked: isLiked,
-                                          size: 25,
-                                          bubblesSize: 1,
-                                          circleColor: const CircleColor(start: Colors.grey, end: Colors.pinkAccent),
-                                        )
+                                        FavoriteButton(post.id, Authentication.myAccount!.id),
                                       ],
                                     ),
                                   ],

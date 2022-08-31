@@ -131,7 +131,7 @@ class FavoriteButton extends HookWidget {
 
     return IconButton(
       onPressed: () async {
-        if (favorite.value) {
+        if (!favorite.value) {
           var result = await PostFirestore.addLike(postId, accountId);
           favorite.value = false;
         } else {

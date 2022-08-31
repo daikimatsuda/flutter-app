@@ -68,6 +68,7 @@ class UserFirestore {
     Map<String, Account> map = {};
     try {
       await Future.forEach(accountIds, (String accountId) async{
+        // アカウントIDに紐づく一覧を取得
         var doc = await users.doc(accountId).get();
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         Account postAccount = Account(

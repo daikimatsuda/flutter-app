@@ -5,15 +5,19 @@ class PostFirestore {
   static final _firestoreInstance = FirebaseFirestore.instance;
   static final CollectionReference posts = _firestoreInstance.collection('posts');
 
+  // 投稿を保存する
   static Future<dynamic> addPost(Post newPost) async {
     try {
+      // my_postsコレクション生成（my_postsにアクセス）
       final CollectionReference _userPosts = _firestoreInstance.collection('users')
           .doc(newPost.postAccountId).collection('my_posts');
+      // 投稿テーブルへ登録
       var result = await posts.add({
         'content': newPost.content,
         'post_account_id': newPost.postAccountId,
         'created_time': Timestamp.now(),
       });
+      // my_postsへの登録
       _userPosts.doc(result.id).set({
         'post_id': result.id,
         'created_time': Timestamp.now()
@@ -57,5 +61,50 @@ class PostFirestore {
       _usersPosts.doc(doc.id).delete();
     });
     posts.doc(accountId).delete();
+  }
+
+  /// 投稿に対するいいねを保存
+  static Future<dynamic> addLike(String postId,String accountId) async {
+    try {
+      // like_usersコレクション生成
+      final CollectionReference _likeUsers = _firestoreInstance.collection('posts')
+          .doc(postId).collection('liked_users');
+      // liked_usersへの登録
+      _likeUsers.doc(accountId).set({
+        'account_id': accountId,
+        'created_time': Timestamp.now()
+      });
+      print('いいね完了');
+      return true;
+    } on FirebaseException catch(e) {
+      print('いいね失敗:$e');
+      return false;
+    }
+  }
+
+  /// 投稿に対するいいねを保存
+  static Future<dynamic> deleteLike(String postId,String accountId) async {
+    try {
+      // like_usersコレクション生成
+      final CollectionReference _likeUsers = _firestoreInstance.collection('posts')
+          .doc(postId).collection('liked_users');
+      // liked_usersへの登録
+      var snapshot = await _likeUsers.doc(accountId).delete();
+      print('いいね削除完了');
+      return true;
+    } on FirebaseException catch(e) {
+      print('いいね削除失敗:$e');
+      return false;
+    }
+  }
+
+  /// 投稿に対するいいね判定
+  static Future<dynamic> isLikedByPostId() async {
+    try {
+      return true;
+    } on FirebaseException catch(e) {
+      print(':$e');
+      return false;
+    }
   }
 }

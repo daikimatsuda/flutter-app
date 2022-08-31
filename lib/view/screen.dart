@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/time_line/post_page.dart';
 import 'package:flutter_dev/view/time_line/time_line_page.dart';
+import 'private_chat/private_chat_page.dart';
 
 class Screen extends StatefulWidget {
   const Screen({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class Screen extends StatefulWidget {
 
 class _ScreenState extends State<Screen> {
   int selectedIndex = 0;
-  List<Widget> pageList = [const TimeLinePage(),const AccountPage()];
+  List<Widget> pageList = [TimeLinePage(),const PrivateChatPage(), const AccountPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,12 @@ class _ScreenState extends State<Screen> {
             label: ''
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.perm_identity_outlined),
-            label: ''
+              icon: Icon(Icons.chat),
+              label: ''
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.perm_identity_outlined),
+              label: ''
           ),
         ],
         currentIndex: selectedIndex,

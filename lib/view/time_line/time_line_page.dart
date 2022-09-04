@@ -11,14 +11,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
-class TimeLinePage extends StatefulWidget {
+class TimeLinePage extends StatelessWidget {
+
   const TimeLinePage({Key? key}) : super(key: key);
-
-  @override
-  State<TimeLinePage> createState() => _TimeLinePageState();
-}
-
-class _TimeLinePageState extends State<TimeLinePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +28,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
         builder: (context, postSnapshot) {
           if(postSnapshot.hasData) {
             List<String> postAccountIds = [];
+            List<String> likedUsers = [];
             postSnapshot.data!.docs.forEach((doc) {
               Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
               if(!postAccountIds.contains(data['post_account_id'])) {
@@ -46,14 +42,19 @@ class _TimeLinePageState extends State<TimeLinePage> {
                   return ListView.builder(
                     itemCount: postSnapshot.data!.docs.length,
                     itemBuilder: (context,index) {
-                      bool isLiked = false;
                       Map<String, dynamic> data = postSnapshot.data!.docs[index].data() as Map<String, dynamic>;
+                      /// TODO
+                      var isLiked = PostFirestore.isLikedByPostId(postSnapshot.data!.docs[index].id, Authentication.myAccount!.id);
+                      // print(isLiked);
                       Post post = Post(
                           id: postSnapshot.data!.docs[index].id,
                           content: data['content'],
                           postAccountId: data['post_account_id'],
-                          createdTime: data['created_time']
+                          createdTime: data['created_time'],
+                          /// TODO
+                          isLiked: true,
                       );
+                      // var isLiked = PostFirestore.isLikedByPostId(post.id, Authentication.myAccount!.id) == true ? true : false;
                       Account postAccount = userSnapshot.data![post.postAccountId]!;
                       return Container(
                         decoration: BoxDecoration(
@@ -94,7 +95,7 @@ class _TimeLinePageState extends State<TimeLinePage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(post.content),
-                                        FavoriteButton(post.id, Authentication.myAccount!.id),
+                                        FavoriteButton(post.id, Authentication.myAccount!.id,true),
                                       ],
                                     ),
                                   ],
@@ -125,9 +126,11 @@ class FavoriteButton extends HookWidget {
   @override
   final String postId;
   final String accountId;
-  FavoriteButton(this.postId,this.accountId);
+  bool isLiked;
+  FavoriteButton(this.postId,this.accountId,this.isLiked);
   Widget build(BuildContext context) {
-    final favorite = useState<bool>(false);
+    print(isLiked);
+    final favorite = useState<bool>(isLiked);
 
     return IconButton(
       onPressed: () async {

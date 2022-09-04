@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PrivateChatPage extends StatefulWidget {
-  const PrivateChatPage({Key? key}) : super(key: key);
+class PrivateChatPage extends StatelessWidget {
 
-  @override
-  State<PrivateChatPage> createState() => _PrivateChatPageState();
-}
+  PrivateChatPage();
 
-class _PrivateChatPageState extends State<PrivateChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +12,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
         title: const Text('Pチャット'),
         elevation: 2,
       ),
+      // body: ,
     );
   }
 }

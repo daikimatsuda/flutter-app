@@ -5,6 +5,30 @@ class PostFirestore {
   static final _firestoreInstance = FirebaseFirestore.instance;
   static final CollectionReference posts = _firestoreInstance.collection('posts');
 
+  static Future<Map<String, Post>?> getPost(String accountId) async {
+    Map<String, Post> map = {};
+    try {
+      QuerySnapshot snapshot = await posts.orderBy('created_time',descending: true).get();
+      snapshot.docs.forEach((docs) async {
+        Map<String, dynamic> data = docs.data() as Map<String, dynamic>;
+        if (docs.id.isNotEmpty) {
+          Post post = Post(
+            id: docs.id,
+            content: data['content'],
+            postAccountId: data['post_account_id'],
+            createdTime: data['created_time'],
+            isLiked: false,
+          );
+          map[post.id] = post;
+        }
+      });
+      print(map);
+      return map;
+    }on FirebaseException catch(e) {
+      return map;
+    }
+  }
+
   // 投稿を保存する
   static Future<dynamic> addPost(Post newPost) async {
     try {
@@ -99,9 +123,12 @@ class PostFirestore {
   }
 
   /// 投稿に対するいいね判定
-  static Future<dynamic> isLikedByPostId() async {
+  static Future<bool> isLikedByPostId(String postId,String accountId) async {
     try {
-      return true;
+      final CollectionReference _likeUsers = posts.doc(postId).collection('liked_users');
+      var snapshot = await _likeUsers.doc(accountId).get();
+      var isLiked = snapshot.exists ? Future.value(true) : Future.value(false);
+      return isLiked;
     } on FirebaseException catch(e) {
       print(':$e');
       return false;

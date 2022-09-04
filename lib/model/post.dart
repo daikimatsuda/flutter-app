@@ -5,6 +5,7 @@ class Post {
   String content;
   String postAccountId;
   Timestamp? createdTime;
+  bool isLiked;
 
-  Post({this.id = '',this.content = '', this.postAccountId = '',this.createdTime});
+  Post({this.id = '',this.content = '', this.postAccountId = '',this.createdTime,this.isLiked = false});
 }

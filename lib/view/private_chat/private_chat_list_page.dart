@@ -14,26 +14,6 @@ class PrivateChatListPage extends StatelessWidget {
         title: const Text('プライベートチャット一覧'),
         elevation: 2,
       ),
-      body: FutureBuilder<Map<String, Post>?>(
-        future: PostFirestore.getPost(Authentication.myAccount!.id),
-        builder: (context, postSnapshot) {
-          if (postSnapshot.hasData &&
-              postSnapshot.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: postSnapshot.data!.length,
-              itemBuilder: (context,index) {
-                return Container(
-                  child: ListTile(
-                    title: Text('いいねしたよ'),
-                  ),
-                );
-              }
-            );
-          } else {
-            return Container();
-          }
-        }
-      ),
     );
   }
 }

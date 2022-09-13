@@ -23,16 +23,14 @@ class TimeLinePage extends StatelessWidget {
         title: const Text('つぶやき投稿'),
         elevation: 2,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: PostFirestore.posts.orderBy('created_time',descending: true).snapshots(),
+      body: FutureBuilder<List<Post?>>(
+        future: PostFirestore.getPosts(Authentication.myAccount!.id),
         builder: (context, postSnapshot) {
           if(postSnapshot.hasData) {
             List<String> postAccountIds = [];
-            List<String> likedUsers = [];
-            postSnapshot.data!.docs.forEach((doc) {
-              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-              if(!postAccountIds.contains(data['post_account_id'])) {
-                postAccountIds.add(data['post_account_id']);
+            postSnapshot.data!.forEach((e) => {
+              if(!postAccountIds.contains(e!.postAccountId)) {
+                postAccountIds.add(e.postAccountId)
               }
             });
             return FutureBuilder<Map<String, Account>?>(
@@ -40,21 +38,15 @@ class TimeLinePage extends StatelessWidget {
               builder: (context, userSnapshot) {
                 if(userSnapshot.hasData && userSnapshot.connectionState == ConnectionState.done) {
                   return ListView.builder(
-                    itemCount: postSnapshot.data!.docs.length,
+                    itemCount: postSnapshot.data!.length,
                     itemBuilder: (context,index) {
-                      Map<String, dynamic> data = postSnapshot.data!.docs[index].data() as Map<String, dynamic>;
-                      /// TODO
-                      var isLiked = PostFirestore.isLikedByPostId(postSnapshot.data!.docs[index].id, Authentication.myAccount!.id);
-                      // print(isLiked);
                       Post post = Post(
-                          id: postSnapshot.data!.docs[index].id,
-                          content: data['content'],
-                          postAccountId: data['post_account_id'],
-                          createdTime: data['created_time'],
-                          /// TODO
-                          isLiked: true,
+                          id: postSnapshot.data![index]!.id,
+                          content: postSnapshot.data![index]!.content,
+                          postAccountId: postSnapshot.data![index]!.postAccountId,
+                          createdTime: postSnapshot.data![index]!.createdTime,
+                          isLiked: postSnapshot.data![index]!.isLiked,
                       );
-                      // var isLiked = PostFirestore.isLikedByPostId(post.id, Authentication.myAccount!.id) == true ? true : false;
                       Account postAccount = userSnapshot.data![post.postAccountId]!;
                       return Container(
                         decoration: BoxDecoration(
@@ -95,7 +87,7 @@ class TimeLinePage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(post.content),
-                                        FavoriteButton(post.id, Authentication.myAccount!.id,true),
+                                        FavoriteButton(post.id, Authentication.myAccount!.id,post.isLiked),
                                       ],
                                     ),
                                   ],

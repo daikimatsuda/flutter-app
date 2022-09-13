@@ -5,27 +5,30 @@ class PostFirestore {
   static final _firestoreInstance = FirebaseFirestore.instance;
   static final CollectionReference posts = _firestoreInstance.collection('posts');
 
-  static Future<Map<String, Post>?> getPost(String accountId) async {
-    Map<String, Post> map = {};
+  static Future<List<Post?>> getPosts(String accountId) async {
+    List<Post> postList = [];
     try {
       QuerySnapshot snapshot = await posts.orderBy('created_time',descending: true).get();
-      snapshot.docs.forEach((docs) async {
-        Map<String, dynamic> data = docs.data() as Map<String, dynamic>;
-        if (docs.id.isNotEmpty) {
+      var list = snapshot.docs;
+      await Future.forEach(list, (QueryDocumentSnapshot item) async{
+        Map<String, dynamic> data = item.data() as Map<String, dynamic>;
+        final CollectionReference _likeUsers = await posts.doc(item.id).collection('liked_users');
+        var snapshot = await _likeUsers.doc(accountId).get();
+        bool isLiked = snapshot.exists;
+        if (item.id.isNotEmpty) {
           Post post = Post(
-            id: docs.id,
+            id: item.id,
             content: data['content'],
             postAccountId: data['post_account_id'],
             createdTime: data['created_time'],
-            isLiked: false,
+            isLiked: isLiked,
           );
-          map[post.id] = post;
+          postList.add(post);
         }
       });
-      print(map);
-      return map;
+      return postList;
     }on FirebaseException catch(e) {
-      return map;
+      return postList;
     }
   }
 
@@ -125,9 +128,14 @@ class PostFirestore {
   /// 投稿に対するいいね判定
   static Future<bool> isLikedByPostId(String postId,String accountId) async {
     try {
-      final CollectionReference _likeUsers = posts.doc(postId).collection('liked_users');
+      final CollectionReference _likeUsers = await posts.doc(postId).collection('liked_users');
+      // var postsSnapshot = await _firestoreInstance.collectionGroup('liked_users').get();
+      // postsSnapshot.docs.map((doc) => {
+      //   print(doc.data())
+      //   print(doc.accountId);
+      // });
       var snapshot = await _likeUsers.doc(accountId).get();
-      var isLiked = snapshot.exists ? Future.value(true) : Future.value(false);
+      bool isLiked = snapshot.exists;
       return isLiked;
     } on FirebaseException catch(e) {
       print(':$e');

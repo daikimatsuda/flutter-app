@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/private_chat/private_chat_list_page.dart';
 import 'package:flutter_dev/view/time_line/post_page.dart';
@@ -14,7 +15,7 @@ class Screen extends StatefulWidget {
 
 class _ScreenState extends State<Screen> {
   int selectedIndex = 0;
-  List<Widget> pageList = [TimeLinePage(),PrivateChatListPage(), const AccountPage()];
+  List<Widget> pageList = [TimeLinePage(),PrivateChatListPage(Authentication.myAccount!.id), const AccountPage()];
 
   @override
   Widget build(BuildContext context) {

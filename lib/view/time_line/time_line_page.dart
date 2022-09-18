@@ -5,6 +5,7 @@ import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/model/post.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/posts.dart';
+import 'package:flutter_dev/utils/firestore/rooms.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/time_line/post_page.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -61,7 +62,7 @@ class TimeLinePage extends StatelessWidget {
                         child: Row(
                           children: [
                             CircleAvatar(
-                              radius: 22,
+                              radius: 28,
                               foregroundImage: NetworkImage(postAccount.imagePath),
                             ),
                             Expanded(
@@ -87,7 +88,7 @@ class TimeLinePage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(post.content),
-                                        FavoriteButton(post.id, Authentication.myAccount!.id,post.isLiked),
+                                        FavoriteButton(post, Authentication.myAccount!.id,post.isLiked),
                                       ],
                                     ),
                                   ],
@@ -116,22 +117,24 @@ class TimeLinePage extends StatelessWidget {
 class FavoriteButton extends HookWidget {
 
   @override
-  final String postId;
+  final Post post;
   final String accountId;
   bool isLiked;
-  FavoriteButton(this.postId,this.accountId,this.isLiked);
+  FavoriteButton(this.post,this.accountId,this.isLiked);
   Widget build(BuildContext context) {
-    print(isLiked);
     final favorite = useState<bool>(isLiked);
 
     return IconButton(
       onPressed: () async {
         if (!favorite.value) {
-          var result = await PostFirestore.addLike(postId, accountId);
+          var result = await PostFirestore.addLike(post.id, accountId);
           favorite.value = true;
+          if (result == true) {
+            var isAddRoom = await RoomFirestore.addRoom(post, accountId);
+          }
         } else {
           favorite.value = false;
-          var result = await PostFirestore.deleteLike(postId, accountId);
+          var result = await PostFirestore.deleteLike(post.id, accountId);
         }
       },
       icon: Icon(

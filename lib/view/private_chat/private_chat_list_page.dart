@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/model/post.dart';
+import 'package:flutter_dev/model/room.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/posts.dart';
+import 'package:flutter_dev/utils/firestore/users.dart';
+import 'package:flutter_dev/view/private_chat/private_chat_page.dart';
+import 'package:intl/intl.dart';
+
+import '../../utils/firestore/rooms.dart';
 
 class PrivateChatListPage extends StatelessWidget {
-  const PrivateChatListPage({Key? key}) : super(key: key);
+  PrivateChatListPage(final String accountId);
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +21,98 @@ class PrivateChatListPage extends StatelessWidget {
         centerTitle: true,
         title: const Text('プライベートチャット一覧'),
         elevation: 2,
+      ),
+      body: FutureBuilder<List<Room?>>(
+        future: RoomFirestore.getRooms(Authentication.myAccount!.id),
+        builder: (context, roomSnapshot) {
+          if (roomSnapshot.hasData) {
+            List<String> postAccountIds = [];
+            roomSnapshot.data!.forEach((e) => {
+              if(!postAccountIds.contains(e!.likeUserId)) {
+                postAccountIds.add(e.likeUserId)
+              }
+            });
+            return FutureBuilder<Map<String, Account>?>(
+              future: UserFirestore.getPostUserMap(postAccountIds),
+              builder: (context, userSnapshot) {
+                if(userSnapshot.hasData && userSnapshot.connectionState == ConnectionState.done) {
+                  return ListView.builder(
+                    itemCount: roomSnapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Room room = Room(
+                        id: roomSnapshot.data![index]!.id,
+                        lastMessage: roomSnapshot.data![index]!.lastMessage,
+                        likeUserId: roomSnapshot.data![index]!.likeUserId,
+                        updatedTime: roomSnapshot.data![index]!.updatedTime,
+                      );
+                      Account postAccount = userSnapshot.data![room.likeUserId]!;
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: index == 0 ? const Border(
+                            top: BorderSide(color: Colors.grey,width: 0),
+                            bottom: BorderSide(color: Colors.grey,width: 0),
+                          ) : const Border(
+                            bottom: BorderSide(color: Colors.grey, width: 0),
+                          )
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 28,
+                              foregroundImage: NetworkImage(postAccount.imagePath),
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(postAccount.name, style: const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
+                                            Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey)),
+                                          ],
+                                        ),
+                                        Text(DateFormat('yyyy/M/d hh:mm').format(room.updatedTime!.toDate())),
+                                      ],
+                                    ),
+                                    SizedBox(height: 2.5,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(room.lastMessage),
+                                        IconButton(
+                                          // iconSize: 18.0,
+                                          onPressed: () async {
+                                            Navigator.pushReplacement(context, MaterialPageRoute(
+                                              builder: (context) => PrivateChatPage()));
+                                          },
+                                          icon: Icon(Icons.input),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              }
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
     );
   }

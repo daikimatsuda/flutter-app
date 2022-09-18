@@ -5,33 +5,6 @@ class PostFirestore {
   static final _firestoreInstance = FirebaseFirestore.instance;
   static final CollectionReference posts = _firestoreInstance.collection('posts');
 
-  static Future<List<Post?>> getPosts(String accountId) async {
-    List<Post> postList = [];
-    try {
-      QuerySnapshot snapshot = await posts.orderBy('created_time',descending: true).get();
-      var list = snapshot.docs;
-      await Future.forEach(list, (QueryDocumentSnapshot item) async{
-        Map<String, dynamic> data = item.data() as Map<String, dynamic>;
-        final CollectionReference _likeUsers = await posts.doc(item.id).collection('liked_users');
-        var snapshot = await _likeUsers.doc(accountId).get();
-        bool isLiked = snapshot.exists;
-        if (item.id.isNotEmpty) {
-          Post post = Post(
-            id: item.id,
-            content: data['content'],
-            postAccountId: data['post_account_id'],
-            createdTime: data['created_time'],
-            isLiked: isLiked,
-          );
-          postList.add(post);
-        }
-      });
-      return postList;
-    }on FirebaseException catch(e) {
-      return postList;
-    }
-  }
-
   // 投稿を保存する
   static Future<dynamic> addPost(Post newPost) async {
     try {
@@ -125,21 +98,22 @@ class PostFirestore {
     }
   }
 
-  /// 投稿に対するいいね判定
-  static Future<bool> isLikedByPostId(String postId,String accountId) async {
+  static Future<Map<String, bool>?> isLikedByPostId(List<String> postIds,String accountId) async{
+    Map<String, bool> map = {};
     try {
-      final CollectionReference _likeUsers = await posts.doc(postId).collection('liked_users');
-      // var postsSnapshot = await _firestoreInstance.collectionGroup('liked_users').get();
-      // postsSnapshot.docs.map((doc) => {
-      //   print(doc.data())
-      //   print(doc.accountId);
-      // });
-      var snapshot = await _likeUsers.doc(accountId).get();
-      bool isLiked = snapshot.exists;
-      return isLiked;
+      await Future.forEach(postIds, (String postId) async{
+        if(postId.isNotEmpty) {
+          final CollectionReference _likeUsers = await posts.doc(postId).collection('liked_users');
+          var snapshot = await _likeUsers.doc(accountId).get();
+          bool isLiked = snapshot.exists;
+          map[postId] = isLiked;
+          print('いいねユーザー取得');
+        }
+      });
+      return map;
     } on FirebaseException catch(e) {
-      print(':$e');
-      return false;
+      print('エラー:$e');
+      return null;
     }
   }
 }

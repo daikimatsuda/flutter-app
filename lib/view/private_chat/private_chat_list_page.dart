@@ -22,14 +22,19 @@ class PrivateChatListPage extends StatelessWidget {
         title: const Text('プライベートチャット一覧'),
         elevation: 2,
       ),
-      body: FutureBuilder<List<Room?>>(
-        future: RoomFirestore.getRooms(Authentication.myAccount!.id),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: RoomFirestore.rooms
+            .where('joined_users',arrayContains: Authentication.myAccount!.id)
+            .orderBy('updated_time',descending: true).snapshots(),
         builder: (context, roomSnapshot) {
           if (roomSnapshot.hasData) {
             List<String> postAccountIds = [];
-            roomSnapshot.data!.forEach((e) => {
-              if(!postAccountIds.contains(e!.likeUserId)) {
-                postAccountIds.add(e.likeUserId)
+            roomSnapshot.data!.docs.forEach((doc) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              var userIds = data['joined_users'];
+              String likeUserId = userIds.where((e) => e != Authentication.myAccount!.id).first;
+              if(!postAccountIds.contains(likeUserId)) {
+                postAccountIds.add(likeUserId);
               }
             });
             return FutureBuilder<Map<String, Account>?>(
@@ -37,13 +42,15 @@ class PrivateChatListPage extends StatelessWidget {
               builder: (context, userSnapshot) {
                 if(userSnapshot.hasData && userSnapshot.connectionState == ConnectionState.done) {
                   return ListView.builder(
-                    itemCount: roomSnapshot.data!.length,
+                    itemCount: roomSnapshot.data!.docs.length,
                     itemBuilder: (context, index) {
+                      Map<String, dynamic> data = roomSnapshot.data!.docs[index].data() as Map<String, dynamic>;
+                      String likeUserId = data['joined_users'].where((e) => e != Authentication.myAccount!.id).first;
                       Room room = Room(
-                        id: roomSnapshot.data![index]!.id,
-                        lastMessage: roomSnapshot.data![index]!.lastMessage,
-                        likeUserId: roomSnapshot.data![index]!.likeUserId,
-                        updatedTime: roomSnapshot.data![index]!.updatedTime,
+                        id: roomSnapshot.data!.docs[index].id,
+                        lastMessage: data['last_message'],
+                        likeUserId: likeUserId,
+                        updatedTime: data['updated_time'],
                       );
                       Account postAccount = userSnapshot.data![room.likeUserId]!;
                       return Container(
@@ -88,7 +95,7 @@ class PrivateChatListPage extends StatelessWidget {
                                         IconButton(
                                           // iconSize: 18.0,
                                           onPressed: () async {
-                                            Navigator.pushReplacement(context, MaterialPageRoute(
+                                            Navigator.push(context, MaterialPageRoute(
                                               builder: (context) => PrivateChatPage()));
                                           },
                                           icon: Icon(Icons.input),

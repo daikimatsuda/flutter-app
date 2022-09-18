@@ -11,6 +11,7 @@ class PrivateChatPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: true,
         title: const Text('Pチャット'),
         elevation: 2,
       ),

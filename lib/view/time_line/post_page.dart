@@ -18,10 +18,10 @@ class _PostPageState extends State<PostPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('新規登録', style: TextStyle(color: Colors.black),),
+        title: const Text('新規登録', style: TextStyle(color: Colors.white),),
           backgroundColor: Theme.of(context).canvasColor,
           elevation: 2,
-          iconTheme: const IconThemeData(color: Colors.black),
+          iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

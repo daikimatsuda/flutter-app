@@ -9,6 +9,9 @@ class RoomFirestore {
   /// チャットルーム作成
   static Future<dynamic> addRoom(Post post, String accountId) async {
     try {
+      if(post.postAccountId == accountId) {
+        return false;
+      }
       List<String> joinedUsers = [post.postAccountId,accountId];
       /// 投稿テーブルへ登録
       var result = await rooms.add({
@@ -26,10 +29,9 @@ class RoomFirestore {
         'created_time': Timestamp.now(),
         'updated_time': Timestamp.now(),
       });
-      print('投稿完了');
       return true;
     } on FirebaseException catch(e) {
-      print('投稿失敗:$e');
+      print('作成失敗:$e');
       return false;
     }
   }

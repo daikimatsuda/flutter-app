@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_dev/model/message.dart';
 import 'package:flutter_dev/model/post.dart';
 import 'package:flutter_dev/model/room.dart';
 
@@ -23,18 +24,20 @@ class RoomFirestore {
       final CollectionReference _roomMessage = rooms.doc(result.id).collection('messages');
       /// messagesへの登録
       /// 初期メッセージは投稿メッセージ
-      _roomMessage.doc(result.id).set({
+      await _roomMessage.add({
+        'room_id': result.id,
         'send_user': post.postAccountId,
         'message': post.content,
-        'created_time': Timestamp.now(),
         'updated_time': Timestamp.now(),
       });
+
       return true;
     } on FirebaseException catch(e) {
       print('作成失敗:$e');
       return false;
     }
   }
+
   static Future<List<Room?>> getRooms(String accountId) async {
     List<Room> roomList = [];
     try {
@@ -55,6 +58,23 @@ class RoomFirestore {
       return roomList;
     }on FirebaseException catch(e) {
       return roomList;
+    }
+  }
+
+  static Future<dynamic> addMessage(Message msg) async {
+    try {
+      /// チャットルームに紐づくメッセージ一覧作成
+      final CollectionReference _roomMessage = rooms.doc(msg.roomId).collection('messages');
+      await _roomMessage.add({
+        'room_id': msg.roomId,
+        'send_user': msg.sendUserId,
+        'message': msg.message,
+        'updated_time': Timestamp.now(),
+      });
+      return true;
+    } on FirebaseException catch(e) {
+      print('作成失敗:$e');
+      return false;
     }
   }
 }

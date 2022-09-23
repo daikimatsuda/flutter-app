@@ -15,7 +15,7 @@ class Screen extends StatefulWidget {
 
 class _ScreenState extends State<Screen> {
   int selectedIndex = 0;
-  List<Widget> pageList = [TimeLinePage(),PrivateChatListPage(Authentication.myAccount!.id), const AccountPage()];
+  List<Widget> pageList = [TimeLinePage(), PrivateChatListPage(), const AccountPage()];
 
   @override
   Widget build(BuildContext context) {

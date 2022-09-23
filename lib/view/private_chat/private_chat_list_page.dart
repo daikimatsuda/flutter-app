@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/model/account.dart';
-import 'package:flutter_dev/model/post.dart';
 import 'package:flutter_dev/model/room.dart';
 import 'package:flutter_dev/utils/authentication.dart';
-import 'package:flutter_dev/utils/firestore/posts.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/private_chat/private_chat_page.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +10,8 @@ import 'package:intl/intl.dart';
 import '../../utils/firestore/rooms.dart';
 
 class PrivateChatListPage extends StatelessWidget {
-  PrivateChatListPage(final String accountId);
+
+  PrivateChatListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +70,7 @@ class PrivateChatListPage extends StatelessWidget {
                             ),
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -87,7 +86,7 @@ class PrivateChatListPage extends StatelessWidget {
                                         Text(DateFormat('yyyy/M/d hh:mm').format(room.updatedTime!.toDate())),
                                       ],
                                     ),
-                                    SizedBox(height: 2.5,),
+                                    const SizedBox(height: 2.5,),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -96,9 +95,9 @@ class PrivateChatListPage extends StatelessWidget {
                                           // iconSize: 18.0,
                                           onPressed: () async {
                                             Navigator.push(context, MaterialPageRoute(
-                                              builder: (context) => PrivateChatPage()));
+                                              builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,)));
                                           },
-                                          icon: Icon(Icons.input),
+                                          icon: const Icon(Icons.input),
                                         )
                                       ],
                                     ),

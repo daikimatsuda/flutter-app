@@ -43,8 +43,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Container(
                   width: 300,
-                  child: TextField(
+                  child: TextFormField(
                     controller: passwordController,
+                    obscureText: true,
                     decoration: const InputDecoration(
                         hintText: 'パスワード'
                     ),

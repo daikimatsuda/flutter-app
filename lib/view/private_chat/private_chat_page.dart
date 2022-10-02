@@ -159,10 +159,12 @@ class PrivateChatPage extends StatelessWidget {
     );
   }
 
-  Padding leftTalk(Message msg, Account account) {
-    return Padding(
+  Container leftTalk(Message msg, Account account) {
+    return Container(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           CircleAvatar(
             child: ClipOval(
@@ -170,18 +172,45 @@ class PrivateChatPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10.0,),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(msg.message),
-            ),
-          ),
-          const SizedBox(width: 5),
-          Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 10,
+                    ),
+                    constraints: BoxConstraints(
+                      maxWidth: 200,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Text(
+                      msg.message, style: const TextStyle(color: Colors.black)
+                    ),
+                  ),
+                ],
+              ),
+              Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
+            ],
+          )
+          // Container(
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: Colors.black12),
+          //     borderRadius: BorderRadius.circular(10),
+          //   ),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(16.0),
+          //     child: Text(msg.message),
+          //   ),
+          // ),
+          // const SizedBox(width: 5),
+          // Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
         ],
       ),
     );

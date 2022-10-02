@@ -65,6 +65,11 @@ class RoomFirestore {
     try {
       /// チャットルームに紐づくメッセージ一覧作成
       final CollectionReference _roomMessage = rooms.doc(msg.roomId).collection('messages');
+      /// チャットルーム更新
+      rooms.doc(msg.roomId).update({
+        'last_message': msg.message,
+        'updated_time': Timestamp.now(),
+      });
       await _roomMessage.add({
         'room_id': msg.roomId,
         'send_user': msg.sendUserId,

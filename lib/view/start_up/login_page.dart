@@ -6,6 +6,7 @@ import 'package:flutter_dev/utils/firestore/users.dart';
 // import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/account/create_account_page.dart';
 import 'package:flutter_dev/view/screen.dart';
+import 'package:flutter_dev/view/start_up/auth_error.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,6 +18,29 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void _showErrorDialog(BuildContext context, String? message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(message!),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))
+          ),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+            )
+          ],
+        );
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +104,9 @@ class _LoginPageState extends State<LoginPage> {
                       } else {
                         print('メール認証できていません');
                       }
+                    } else if (result != FirebaseAuthResultStatus.Successful) {
+                      final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);
+                      _showErrorDialog(context, errorMessage);
                     }
                   }, child: const Text('emailでログイン')
                 ),

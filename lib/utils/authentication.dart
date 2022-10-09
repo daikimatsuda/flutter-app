@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dev/model/account.dart';
 
+import '../view/start_up/auth_error.dart';
+
 class Authentication {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static User? currentFirebaseUser;
@@ -24,8 +26,9 @@ class Authentication {
       currentFirebaseUser = _result.user;
       return _result;
     } on FirebaseAuthException catch(e) {
-      print('authサインエラー: $e');
-      return false;
+      FirebaseAuthResultStatus _result;
+      _result = FirebaseAuthExceptionHandler.handleException(e);
+      return _result;
     }
   }
 

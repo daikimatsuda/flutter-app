@@ -186,9 +186,9 @@ class PrivateChatPage extends StatelessWidget {
                     constraints: BoxConstraints(
                       maxWidth: 200,
                     ),
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       msg.message, style: const TextStyle(color: Colors.black)
@@ -199,18 +199,6 @@ class PrivateChatPage extends StatelessWidget {
               Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
             ],
           )
-          // Container(
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: Colors.black12),
-          //     borderRadius: BorderRadius.circular(10),
-          //   ),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: Text(msg.message),
-          //   ),
-          // ),
-          // const SizedBox(width: 5),
-          // Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
         ],
       ),
     );

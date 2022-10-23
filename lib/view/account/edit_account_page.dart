@@ -6,8 +6,8 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
+import 'package:flutter_dev/view/account/account_icon_page.dart';
 import 'package:flutter_dev/view/start_up/login_page.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditAccountPage extends StatefulWidget {
   const EditAccountPage({Key? key}) : super(key: key);
@@ -21,13 +21,13 @@ class _EditAccountPageState extends State<EditAccountPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController userIdController = TextEditingController();
   TextEditingController selfIntroductionController = TextEditingController();
-  File? image;
+  String? iconPath;
 
-  ImageProvider getImage() {
-    if(image == null) {
-      return NetworkImage(myAccount.imagePath);
+  String getImage() {
+    if(iconPath == null) {
+      return FunctionUtils.getIconImage(myAccount.imagePath);
     } else {
-      return FileImage(image!);
+      return iconPath!;
     }
   }
 
@@ -51,15 +51,20 @@ class _EditAccountPageState extends State<EditAccountPage> {
               SizedBox(height: 30),
               GestureDetector(
                 onTap: () async{
-                  var result = await FunctionUtils.getImageFromGallery();
+                  var result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccountIconPage(),
+                    ),
+                  );
                   if(result != null) {
                     setState(() {
-                      image = File(result.path);
+                      iconPath = result;
                     });
                   }
                 },
                 child: CircleAvatar(
-                  foregroundImage: getImage(),
+                  foregroundImage: AssetImage(getImage()),
                   radius: 40,
                   child: Icon(Icons.add),
                 ),
@@ -97,11 +102,10 @@ class _EditAccountPageState extends State<EditAccountPage> {
                     )
                     {
                       String imagePath = '';
-                      if(image == null) {
-                        imagePath = myAccount.imagePath;
+                      if(iconPath == null) {
+                        imagePath = FunctionUtils.getIconId(myAccount.imagePath);
                       } else {
-                        var result = await FunctionUtils.uploadImage(myAccount.id, image!);
-                        imagePath = result;
+                        imagePath = FunctionUtils.getIconId(iconPath!);
                       }
                       Account updateAccount = Account(
                         id: myAccount.id,

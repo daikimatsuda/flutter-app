@@ -5,6 +5,7 @@ import 'package:flutter_dev/model/post.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/posts.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
+import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/view/account/edit_account_page.dart';
 import 'package:intl/intl.dart';
 
@@ -41,7 +42,7 @@ class _AccountPageState extends State<AccountPage> {
                             children: [
                               CircleAvatar(
                                 radius: 32,
-                                foregroundImage: NetworkImage(myAccount.imagePath),
+                                foregroundImage: AssetImage(FunctionUtils.getIconImage(myAccount.imagePath)),
                               ),
                               const SizedBox(width: 10),
                               Column(
@@ -111,7 +112,7 @@ class _AccountPageState extends State<AccountPage> {
                                       children: [
                                         CircleAvatar(
                                           radius: 22,
-                                          foregroundImage: NetworkImage(myAccount.imagePath),
+                                          foregroundImage: AssetImage(FunctionUtils.getIconImage(myAccount.imagePath)),
                                         ),
                                         Expanded(
                                           child: Container(

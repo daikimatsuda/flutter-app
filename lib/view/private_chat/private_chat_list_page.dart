@@ -4,6 +4,7 @@ import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/model/room.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
+import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/view/private_chat/private_chat_page.dart';
 import 'package:intl/intl.dart';
 
@@ -66,7 +67,7 @@ class PrivateChatListPage extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 28,
-                              foregroundImage: NetworkImage(postAccount.imagePath),
+                              foregroundImage: AssetImage(FunctionUtils.getIconImage(postAccount.imagePath)),
                             ),
                             Expanded(
                               child: Container(

@@ -7,6 +7,7 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
+import 'package:flutter_dev/view/account/account_icon_page.dart';
 import 'package:flutter_dev/view/start_up/check_email_page.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   TextEditingController selfIntroductionController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  File? image;
+  String? iconPath;
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +36,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               const SizedBox(height: 30),
               GestureDetector(
                 onTap: () async {
-                  var result = await FunctionUtils.getImageFromGallery();
+                  var result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccountIconPage(),
+                    ),
+                  );
                   if(result != null) {
                     setState(() {
-                      image = File(result.path);
+                      iconPath = result;
                     });
                   }
                 },
                 child: CircleAvatar(
-                  foregroundImage: image == null ? null : FileImage(image!),
+                  foregroundImage: iconPath == null ? null : AssetImage(iconPath!),
                   radius: 40,
                   child: const Icon(Icons.add),
                 ),
@@ -95,7 +101,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   if(nameController.text.isNotEmpty
                       && userIdController.text.isNotEmpty
                       && selfIntroductionController.text.isNotEmpty
-                      && image != null
+                      && iconPath != null
                       ) {
                     var result = await Authentication.signUp(email: emailController.text, password: passwordController.text);
                     if(result is UserCredential) {
@@ -117,11 +123,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   Future<dynamic> createAccount(String uid) async{
-    String imagePath = await FunctionUtils.uploadImage(uid, image!);
     Account newAccount = Account(
       id: uid,
       name: nameController.text,
-      imagePath: imagePath,
+      imagePath: FunctionUtils.getIconId(iconPath!),
       selfIntroduction: selfIntroductionController.text,
       userId: userIdController.text,
     );

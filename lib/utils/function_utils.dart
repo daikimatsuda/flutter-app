@@ -23,4 +23,15 @@ class FunctionUtils {
     print('imgage_path:$downloadUrl');
     return downloadUrl;
   }
+
+  static String getIconImage(String iconId) {
+    String extension = '.png';
+    String iconImgPath = "images/icon_" + iconId + extension;
+    return iconImgPath;
+  }
+
+  static String getIconId(String iconImgPath) {
+    var iconId = iconImgPath.replaceAll(RegExp(r"[^0-9]"), "");
+    return iconId;
+  }
 }

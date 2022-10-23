@@ -6,6 +6,7 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/posts.dart';
 import 'package:flutter_dev/utils/firestore/rooms.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
+import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
@@ -20,13 +21,21 @@ class TimeLinePage extends StatelessWidget {
         centerTitle: true,
         title: const Text('つぶやき投稿'),
         elevation: 2,
+        // flexibleSpace: Container(
+        //     decoration: BoxDecoration(
+        //       image: DecorationImage(
+        //         image: AssetImage('images/back.png'),
+        //         fit: BoxFit.cover
+        //       )
+        //     ),
+        // ),
       ),
       body: Container(
         decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('images/night.png'),
-            fit: BoxFit.fill,
-        )
+        // image: DecorationImage(
+        //   image: AssetImage('images/back.png'),
+        //     fit: BoxFit.fill,
+        // )
         ),
         child: StreamBuilder<QuerySnapshot>(
           stream: PostFirestore.posts.orderBy('created_time',descending: true).snapshots(),
@@ -75,7 +84,7 @@ class TimeLinePage extends StatelessWidget {
                                   children: [
                                     CircleAvatar(
                                       radius: 28,
-                                      foregroundImage: NetworkImage(postAccount.imagePath),
+                                      foregroundImage: AssetImage(FunctionUtils.getIconImage(postAccount.imagePath)),
                                     ),
                                     Expanded(
                                       child: Container(

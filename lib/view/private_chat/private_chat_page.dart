@@ -5,6 +5,7 @@ import 'package:flutter_dev/model/message.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/rooms.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
+import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:intl/intl.dart';
 
 class PrivateChatPage extends StatelessWidget {
@@ -168,7 +169,7 @@ class PrivateChatPage extends StatelessWidget {
         children: <Widget>[
           CircleAvatar(
             child: ClipOval(
-              child: Image.network(account.imagePath),
+              child: Image.asset(FunctionUtils.getIconImage(account.imagePath)),
             ),
           ),
           const SizedBox(width: 10.0,),

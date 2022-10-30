@@ -6,6 +6,7 @@ import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/view/private_chat/private_chat_page.dart';
+import 'package:flutter_dev/view/private_chat/private_chat_page_test.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/firestore/rooms.dart';
@@ -99,7 +100,7 @@ class PrivateChatListPage extends StatelessWidget {
                                               builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,)));
                                           },
                                           icon: const Icon(Icons.input),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ],

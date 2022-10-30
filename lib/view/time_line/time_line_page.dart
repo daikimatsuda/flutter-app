@@ -20,22 +20,16 @@ class TimeLinePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('つぶやき投稿'),
-        elevation: 2,
-        // flexibleSpace: Container(
-        //     decoration: BoxDecoration(
-        //       image: DecorationImage(
-        //         image: AssetImage('images/back.png'),
-        //         fit: BoxFit.cover
-        //       )
-        //     ),
-        // ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
+      extendBodyBehindAppBar: true  ,
       body: Container(
         decoration: const BoxDecoration(
-        // image: DecorationImage(
-        //   image: AssetImage('images/back.png'),
-        //     fit: BoxFit.fill,
-        // )
+          image: DecorationImage(
+            image: AssetImage('images/back.png'),
+              fit: BoxFit.fill,
+          )
         ),
         child: StreamBuilder<QuerySnapshot>(
           stream: PostFirestore.posts.orderBy('created_time',descending: true).snapshots(),

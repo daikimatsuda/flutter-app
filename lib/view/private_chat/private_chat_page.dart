@@ -64,7 +64,7 @@ class PrivateChatPage extends StatelessWidget {
                                   Account sendAccount = userSnapshot.data![message.sendUserId]!;
                                   return Column(
                                     children: [
-                                      message.isMine ? rightTalk(message) : leftTalk(message,sendAccount),
+                                      message.isMine ? _SentMessageWidget(msg:message) : leftTalk(message,sendAccount),
                                     ],
                                   );
                                 }
@@ -137,28 +137,28 @@ class PrivateChatPage extends StatelessWidget {
     );
   }
 
-  Padding rightTalk(Message msg) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(40),
-                topLeft: Radius.circular(40),
-                bottomLeft: Radius.circular(40),
-              ),
-              color: Colors.green
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(msg.message,style: TextStyle(color: Colors.black),),
-          ),
-        ),
-      ),
-    );
-  }
+  // Padding rightTalk(Message msg) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 10.0),
+  //     child: Align(
+  //       alignment: Alignment.centerRight,
+  //       child: Container(
+  //         decoration: const BoxDecoration(
+  //             borderRadius: BorderRadius.only(
+  //               topRight: Radius.circular(40),
+  //               topLeft: Radius.circular(40),
+  //               bottomLeft: Radius.circular(40),
+  //             ),
+  //             color: Colors.green
+  //         ),
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(16.0),
+  //           child: Text(msg.message,style: TextStyle(color: Colors.black),),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Container leftTalk(Message msg, Account account) {
     return Container(
@@ -192,7 +192,7 @@ class PrivateChatPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      msg.message, style: const TextStyle(color: Colors.black)
+                      msg.message, style: const TextStyle(color: Colors.white)
                     ),
                   ),
                 ],
@@ -200,6 +200,59 @@ class PrivateChatPage extends StatelessWidget {
               Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
             ],
           )
+        ],
+      ),
+    );
+  }
+}
+
+class _SentMessageWidget extends StatelessWidget {
+  // final String message;
+  final Message msg;
+
+  // _SentMessageWidget({this.msg});
+  _SentMessageWidget({Key? key, required this.msg}) : super(key: key);
+  final _formatter = DateFormat("HH:MM");
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            _formatter.format(msg.updatedTime!.toDate()),
+            style: const TextStyle(fontSize: 10),
+          ),
+          const SizedBox(width: 5),
+          Column(
+            children: [
+              const SizedBox(height: 5),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 10,
+                ),
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.6,
+                ),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(40),
+                    bottomLeft: Radius.circular(40),
+                  ),
+                  color: Colors.green,
+                  // borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Text(
+                  msg.message,style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

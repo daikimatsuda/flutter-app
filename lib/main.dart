@@ -14,6 +14,8 @@ void main() async{
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,4 +29,24 @@ class MyApp extends StatelessWidget {
       home: const LoginPage(),
     );
   }
+
+  // Widget build(BuildContext context) {
+  //   return FutureBuilder(
+  //     future: _initialization,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasError) {
+  //         return SizedBox(); //エラーページ
+  //       }
+  //
+  //       // Once complete, show your application
+  //       if (snapshot.connectionState == ConnectionState.done) {
+  //         //ここに、アプリの本体をおく
+  //         return TimeLinePage();
+  //       }
+  //
+  //       // Otherwise, show something whilst waiting for initialization to complete
+  //       return LoginPage();
+  //     }
+  //   );
+  // }
 }

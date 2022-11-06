@@ -20,7 +20,7 @@ class TimeLinePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('つぶやき投稿'),
+        title: const Text('つぶやき'),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -78,6 +78,7 @@ class TimeLinePage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     CircleAvatar(
+                                      backgroundColor: Colors.white,
                                       radius: 28,
                                       foregroundImage: AssetImage(FunctionUtils.getIconImage(postAccount.imagePath)),
                                     ),

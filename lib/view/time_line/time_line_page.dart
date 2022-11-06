@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/model/post.dart';
@@ -91,8 +92,8 @@ class TimeLinePage extends StatelessWidget {
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Text(postAccount.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                    Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey)),
+                                                    Text(postAccount.name, style: const TextStyle(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
+                                                    Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis,),
                                                   ],
                                                 ),
                                                 Text(DateFormat('M/d/yy').format(post.createdTime!.toDate()))
@@ -159,7 +160,7 @@ class FavoriteButton extends HookWidget {
       },
       icon: Icon(
         Icons.favorite,
-        color: (favorite.value) ? Colors.pink : Colors.black12,
+        color: (favorite.value) ? Colors.pink : Colors.white70,
       ),
     );
   }

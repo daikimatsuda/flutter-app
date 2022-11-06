@@ -85,7 +85,7 @@ class PrivateChatListPage extends StatelessWidget {
                                             Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey)),
                                           ],
                                         ),
-                                        Text(DateFormat('yyyy/M/d hh:mm').format(room.updatedTime!.toDate())),
+                                        Text(DateFormat('hh:mm').format(room.updatedTime!.toDate())),
                                       ],
                                     ),
                                     const SizedBox(height: 2.5,),

@@ -197,7 +197,7 @@ class PrivateChatPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(DateFormat('HH:MM').format(msg.updatedTime!.toDate()),style: const TextStyle(fontSize: 10),),
+              Text(DateFormat('yyyy/MM/dd HH:MM').format(msg.updatedTime!.toDate()).toString(),style: const TextStyle(fontSize: 10),),
             ],
           )
         ],
@@ -223,7 +223,7 @@ class _SentMessageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            _formatter.format(msg.updatedTime!.toDate()),
+            DateFormat('yyyy/MM/dd HH:MM').format(msg.updatedTime!.toDate()).toString(),
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 5),

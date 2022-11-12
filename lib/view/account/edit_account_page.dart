@@ -22,6 +22,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
   TextEditingController userIdController = TextEditingController();
   TextEditingController selfIntroductionController = TextEditingController();
   String? iconPath;
+  var selectedValue = "営業";
+  final lists = <String>["営業", "エンジニア", "総務", "経理", "建設業"];
 
   String getImage() {
     if(iconPath == null) {
@@ -64,6 +66,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                   }
                 },
                 child: CircleAvatar(
+                  backgroundColor: Colors.white,
                   foregroundImage: AssetImage(getImage()),
                   radius: 40,
                   child: Icon(Icons.add),
@@ -91,6 +94,23 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 child: TextField(
                   controller: selfIntroductionController,
                   decoration: InputDecoration(hintText: '自己紹介'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Container(
+                  width: 300,
+                  child: DropdownButton<String>(
+                    value: selectedValue,
+                    items: lists.map((String list) =>
+                      DropdownMenuItem(value: list, child: Text(list)))
+                        .toList(),
+                    onChanged: (String? value) {
+                      setState((){
+                        selectedValue = value!;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 50),

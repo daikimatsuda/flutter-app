@@ -9,7 +9,17 @@ import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyDi0ABaWYJBc9LlRbmg9wyAzTKFM5fBcos",
+        authDomain: "koen-96970.firebaseapp.com",
+        projectId: "koen-96970",
+        storageBucket: "koen-96970.appspot.com",
+        messagingSenderId: "945225503123",
+        appId: "1:945225503123:web:595331813f032cd2599866",
+        measurementId: "G-5KBYSKMTDD"
+    )
+  );
   runApp(MyApp());
 }
 

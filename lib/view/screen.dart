@@ -57,7 +57,7 @@ class _ScreenState extends State<Screen> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const PostPage()));
         },
         child: const Icon(Icons.chat_bubble_outline,color: Colors.white,),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blue,
       ),
     );
   }

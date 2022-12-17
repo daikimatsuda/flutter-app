@@ -12,8 +12,9 @@ class PrivateChatPage extends StatelessWidget {
 
   final String roomId;
   final String partnerId;
+  final String sendUserName;
 
-  PrivateChatPage({Key? key, required this.roomId,required this.partnerId}) : super(key: key);
+  PrivateChatPage({Key? key, required this.roomId,required this.partnerId, required this.sendUserName}) : super(key: key);
 
   List<String> messages = [];
   TextEditingController contentController = TextEditingController();
@@ -23,11 +24,18 @@ class PrivateChatPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: true,
-        title: const Text('Pチャット'),
-        elevation: 2,
+        title: Text(sendUserName),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.png'),
+              fit: BoxFit.fill,
+            )
+        ),
         child: Column(
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
@@ -137,29 +145,6 @@ class PrivateChatPage extends StatelessWidget {
     );
   }
 
-  // Padding rightTalk(Message msg) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 10.0),
-  //     child: Align(
-  //       alignment: Alignment.centerRight,
-  //       child: Container(
-  //         decoration: const BoxDecoration(
-  //             borderRadius: BorderRadius.only(
-  //               topRight: Radius.circular(40),
-  //               topLeft: Radius.circular(40),
-  //               bottomLeft: Radius.circular(40),
-  //             ),
-  //             color: Colors.green
-  //         ),
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(16.0),
-  //           child: Text(msg.message,style: TextStyle(color: Colors.black),),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Container leftTalk(Message msg, Account account) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -197,7 +182,7 @@ class PrivateChatPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(DateFormat('yyyy/MM/dd HH:MM').format(msg.updatedTime!.toDate()).toString(),style: const TextStyle(fontSize: 10),),
+              Text(DateFormat('yyyy/MM/dd HH:mm').format(msg.updatedTime!.toDate()).toString(),style: const TextStyle(fontSize: 10),),
             ],
           )
         ],
@@ -212,7 +197,6 @@ class _SentMessageWidget extends StatelessWidget {
 
   // _SentMessageWidget({this.msg});
   _SentMessageWidget({Key? key, required this.msg}) : super(key: key);
-  final _formatter = DateFormat("HH:MM");
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +207,7 @@ class _SentMessageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            DateFormat('yyyy/MM/dd HH:MM').format(msg.updatedTime!.toDate()).toString(),
+            DateFormat('yyyy/MM/dd HH:mm').format(msg.updatedTime!.toDate()).toString(),
             style: const TextStyle(fontSize: 10),
           ),
           const SizedBox(width: 5),

@@ -106,7 +106,7 @@ class PrivateChatListPage extends StatelessWidget {
                                             // iconSize: 18.0,
                                             onPressed: () async {
                                               Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,)));
+                                                builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,sendUserName: postAccount.name,)));
                                             },
                                             icon: const Icon(Icons.forum),
                                           ),

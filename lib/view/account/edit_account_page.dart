@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
@@ -39,6 +40,21 @@ class _EditAccountPageState extends State<EditAccountPage> {
     nameController = TextEditingController(text: myAccount.name);
     userIdController = TextEditingController(text: myAccount.userId);
     selfIntroductionController = TextEditingController(text:  myAccount.selfIntroduction);
+  }
+
+  _myDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        content: Text("更新が完了しました。"),
+        actions: [
+          CupertinoDialogAction(
+            child: Text('OK'),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -137,7 +153,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                       Authentication.myAccount = updateAccount;
                       var result = await UserFirestore.updateUser(updateAccount);
                       if(result == true) {
-                        Navigator.pop(context, true);
+                        _myDialog();
                       }
                     }
                   },

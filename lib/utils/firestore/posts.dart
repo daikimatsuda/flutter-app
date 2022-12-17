@@ -22,7 +22,6 @@ class PostFirestore {
         'post_id': result.id,
         'created_time': Timestamp.now()
       });
-      print('投稿完了');
       return true;
     } on FirebaseException catch(e) {
       print('投稿失敗:$e');
@@ -44,7 +43,6 @@ class PostFirestore {
         );
         postList.add(post);
       });
-      print('自分の投稿を取得完了');
       return postList;
     } on FirebaseException catch(e) {
       print('自分の投稿取得エラー:$e');
@@ -74,7 +72,6 @@ class PostFirestore {
         'account_id': accountId,
         'created_time': Timestamp.now()
       });
-      print('いいね完了');
       return true;
     } on FirebaseException catch(e) {
       print('いいね失敗:$e');
@@ -90,7 +87,6 @@ class PostFirestore {
           .doc(postId).collection('liked_users');
       // liked_usersへの登録
       var snapshot = await _likeUsers.doc(accountId).delete();
-      print('いいね削除完了');
       return true;
     } on FirebaseException catch(e) {
       print('いいね削除失敗:$e');
@@ -107,7 +103,6 @@ class PostFirestore {
           var snapshot = await _likeUsers.doc(accountId).get();
           bool isLiked = snapshot.exists;
           map[postId] = isLiked;
-          print('いいねユーザー取得');
         }
       });
       return map;

@@ -81,7 +81,6 @@ class UserFirestore {
           updateTime: data['update_time'],
         );
         map[accountId] = postAccount;
-        print('投稿ユーザーの情報取得完了');
       });
       return map;
     } on FirebaseException catch(e) {

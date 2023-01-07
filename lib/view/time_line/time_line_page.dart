@@ -84,6 +84,7 @@ class TimeLinePage extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: Container(
+                                        alignment: Alignment.centerLeft,
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,13 +92,34 @@ class TimeLinePage extends StatelessWidget {
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Text(postAccount.name, style: const TextStyle(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
-                                                    Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis,),
-                                                  ],
+                                                Expanded(
+                                                  flex: 8,
+                                                  child: Container(
+                                                    child: RichText(
+                                                      softWrap: true,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: postAccount.name,
+                                                            style: const TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.white
+                                                            )
+                                                          ),
+                                                          TextSpan(
+                                                            text: '@${postAccount.userId}',
+                                                            style: TextStyle(color: Colors.grey),
+                                                          )
+                                                        ]
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                                Text(DateFormat('M/d/yy').format(post.createdTime!.toDate()))
+                                                Container(
+                                                  child: Text(DateFormat('yy/M/d').format(post.createdTime!.toDate()))
+                                                )
                                               ],
                                             ),
                                             const SizedBox(height: 2.5,),
@@ -105,9 +127,14 @@ class TimeLinePage extends StatelessWidget {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Expanded(
-                                                  child: Text(post.content),
+                                                  flex: 9,
+                                                  child: Container(
+                                                    child: Text(post.content,)
+                                                  ),
                                                 ),
-                                                FavoriteButton(post, Authentication.myAccount!.id,isLiked),
+                                                Container(
+                                                  child: FavoriteButton(post, Authentication.myAccount!.id,isLiked)
+                                                ),
                                               ],
                                             ),
                                           ],

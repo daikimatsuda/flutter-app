@@ -88,27 +88,56 @@ class PrivateChatListPage extends StatelessWidget {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(postAccount.name, style: const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
-                                              Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey)),
-                                            ],
+                                          Expanded(
+                                            flex: 8,
+                                            child: Container(
+                                              child:
+                                                // Text(postAccount.name, style: const TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold)),
+                                                // Text('@${postAccount.userId}', style: const TextStyle(color: Colors.grey)),
+                                                RichText(
+                                                  softWrap: true,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: postAccount.name,
+                                                        style: const TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white
+                                                        )
+                                                      ),
+                                                      TextSpan(
+                                                        text: '@${postAccount.userId}',
+                                                        style: TextStyle(color: Colors.grey),
+                                                      )
+                                                    ]
+                                                  )
+                                                ),
+                                            ),
                                           ),
-                                          Text(DateFormat('hh:mm').format(room.updatedTime!.toDate())),
+                                          Container(child: Text(DateFormat('yy/M/d').format(room.updatedTime!.toDate()))),
                                         ],
                                       ),
                                       const SizedBox(height: 2.5,),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(room.lastMessage),
-                                          IconButton(
-                                            // iconSize: 18.0,
-                                            onPressed: () async {
-                                              Navigator.push(context, MaterialPageRoute(
-                                                builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,sendUserName: postAccount.name,)));
-                                            },
-                                            icon: const Icon(Icons.forum),
+                                          Expanded(
+                                            flex: 9,
+                                            child: Container(
+                                              child: Text(room.lastMessage)
+                                            ),
+                                          ),
+                                          Container(
+                                            child: IconButton(
+                                              // iconSize: 18.0,
+                                              onPressed: () async {
+                                                Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context) => PrivateChatPage(roomId: room.id, partnerId: room.likeUserId,sendUserName: postAccount.name,)));
+                                              },
+                                              icon: const Icon(Icons.forum),
+                                            ),
                                           ),
                                         ],
                                       ),

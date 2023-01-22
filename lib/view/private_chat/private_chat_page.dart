@@ -110,14 +110,16 @@ class PrivateChatPage extends StatelessWidget {
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(40),
                 ),
-                child: TextField(
+                child: TextFormField(
                   autofocus: true,
+                  maxLength: 150,
                   style: TextStyle(
                     color: Colors.black
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'メッセージを入力してください',
+                    counterText: '',
                     hintStyle: TextStyle(color: Colors.grey)
                   ),
                   controller: contentController,

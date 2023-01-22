@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/component/custom_text_form.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
@@ -10,6 +11,9 @@ import 'package:flutter_dev/utils/widget.utils.dart';
 import 'package:flutter_dev/view/account/account_icon_page.dart';
 import 'package:flutter_dev/view/start_up/check_email_page.dart';
 
+import '../../validator/max_length_validator.dart';
+import '../../validator/required_validator.dart';
+
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({Key? key}) : super(key: key);
   @override
@@ -17,12 +21,90 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController userIdController = TextEditingController();
-  TextEditingController selfIntroductionController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+
+  /// 各フィールド定義
+  String _name = '';
+  String _userId = '';
+  String _selfIntroduction = '';
+  String _email = '';
+  String _password = '';
   String? iconPath;
+  /// 入力エラー有無
+  bool _isValidName = false;
+  bool _isValidUserId = false;
+  bool _isValidSelfIntrodution = false;
+  bool _isValidEmail = false;
+  bool _isValidPassword = false;
+
+  /// フィールド状態管理
+  void _setName(String name) {
+    setState(() {
+      _name = name;
+    });
+  }
+  void _setUserId(String userId) {
+    setState(() {
+      _userId = userId;
+    });
+  }
+
+  void _setSelfIntroduction(String selfIntroduction) {
+    setState(() {
+      _selfIntroduction = selfIntroduction;
+    });
+  }
+
+  void _setEmail(String email) {
+    setState(() {
+      _email = email;
+    });
+  }
+
+  void _setPassword(String password) {
+    setState(() {
+      _password = password;
+    });
+  }
+
+  void _setIsValidName(bool isValid) {
+    setState(() {
+      _isValidName = isValid;
+    });
+  }
+
+  ///  年齢のバリデーションの結果をステートに保持する
+  void _setIsValidUserId(bool isValid) {
+    setState(() {
+      _isValidUserId = isValid;
+    });
+  }
+
+  ///  自己紹介のバリデーションの結果をステートに保持する
+  void _setIsValidSelfIntroduction(bool isValid) {
+    setState(() {
+      _isValidSelfIntrodution = isValid;
+    });
+  }
+
+  ///  メールアドレスのバリデーションの結果をステートに保持する
+  void _setIsValidEmail(bool isValid) {
+    setState(() {
+      _isValidEmail = isValid;
+    });
+  }
+
+  ///  パスワードのバリデーションの結果をステートに保持する
+  void _setIsValidPassword(bool isValid) {
+    setState(() {
+      _isValidPassword = isValid;
+    });
+  }
+
+  /// 入力エラー確認
+  bool _isAllValid() {
+    return _isValidName && _isValidUserId && _isValidSelfIntrodution &&
+      _isValidEmail && _isValidPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,71 +131,93 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   }
                 },
                 child: CircleAvatar(
-                  foregroundImage: iconPath == null ? null : AssetImage(iconPath!),
+                  foregroundImage: iconPath == null
+                      ? null : AssetImage(iconPath!),
                   radius: 40,
                   child: const Icon(Icons.add),
                 ),
               ),
               Container(
                 width: 300,
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(hintText: '名前'),
+                child: CustomTextField(
+                  label: '名前',
+                  onChange: _setName,
+                  validators: [
+                    RequiredValidator(),
+                    MaxLengthValidator(20),
+                  ],
+                  setIsValid: _setIsValidName,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
                   width: 300,
-                  child: TextField(
-                    controller: userIdController,
-                    decoration: const InputDecoration(hintText: 'ユーザーID'),
+                  child: CustomTextField(
+                    label: 'ユーザーID',
+                    onChange: _setUserId,
+                    validators: [
+                      RequiredValidator(),
+                      MaxLengthValidator(20),
+                    ],
+                    setIsValid: _setIsValidUserId,
                   ),
                 ),
               ),
               Container(
                 width: 300,
-                child: TextField(
-                  controller: selfIntroductionController,
-                  decoration: InputDecoration(hintText: '自己紹介'),
-                ),
+                child: CustomTextField(
+                  label: '自己紹介',
+                  onChange: _setSelfIntroduction,
+                  validators: [
+                    RequiredValidator(),
+                    MaxLengthValidator(200),
+                  ],
+                  setIsValid: _setIsValidSelfIntroduction,
+                )
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
                   width: 300,
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(hintText: 'メールアドレス'),
-                  ),
+                  child: CustomTextField(
+                    label: 'メールアドレス',
+                    onChange: _setEmail,
+                    validators: [
+                      RequiredValidator(),
+                      MaxLengthValidator(64),
+                    ],
+                    setIsValid: _setIsValidEmail,
+                  )
                 ),
               ),
               Container(
                 width: 300,
-                child: TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(hintText: 'パスワード'),
-                ),
+                child: CustomTextField(
+                  label: 'パスワード',
+                  onChange: _setPassword,
+                  validators: [
+                    RequiredValidator(),
+                    MaxLengthValidator(128),
+                  ],
+                  setIsValid: _setIsValidPassword,
+                )
               ),
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () async {
-                  if(nameController.text.isNotEmpty
-                      && userIdController.text.isNotEmpty
-                      && selfIntroductionController.text.isNotEmpty
-                      && iconPath != null
-                      ) {
-                    var result = await Authentication.signUp(email: emailController.text, password: passwordController.text);
+                  if(_isAllValid() && iconPath != null) {
+                    var result = await Authentication.signUp(email: _email, password: _password);
                     if(result is UserCredential) {
                       var _result = await createAccount(result.user!.uid);
                       if(_result == true) {
                         result.user!.sendEmailVerification();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckEmailPage(email: emailController.text, pass: passwordController.text)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckEmailPage(email: _email, pass: _password,)));
                       }
                     }
                   }
                 },
-                child: Text('アカウントを作成')
+                child: const Text('アカウントを作成')
               )
             ],
           ),
@@ -125,10 +229,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Future<dynamic> createAccount(String uid) async{
     Account newAccount = Account(
       id: uid,
-      name: nameController.text,
+      name: _name,
       imagePath: FunctionUtils.getIconId(iconPath!),
-      selfIntroduction: selfIntroductionController.text,
-      userId: userIdController.text,
+      selfIntroduction: _selfIntroduction,
+      userId: _userId,
     );
     var _result = await UserFirestore.setUser(newAccount);
     return _result;

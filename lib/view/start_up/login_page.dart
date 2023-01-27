@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/component/error_dailog.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 // import 'package:flutter_dev/view/account/account_page.dart';
@@ -18,29 +19,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  void _showErrorDialog(BuildContext context, String? message) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(message!),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))
-          ),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-            )
-          ],
-        );
-      }
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +84,12 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     } else if (result != FirebaseAuthResultStatus.Successful) {
                       final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);
-                      _showErrorDialog(context, errorMessage);
+                      showDialog<void>(
+                          context: context,
+                          builder: (_) {
+                            return ErrorDialog(message: errorMessage);
+                          }
+                      );
                     }
                   }, child: const Text('emailでログイン')
                 ),

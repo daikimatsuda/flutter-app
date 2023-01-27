@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/component/custom_text_form.dart';
+import 'package:flutter_dev/component/error_dailog.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/utils/function_utils.dart';
 import 'package:flutter_dev/utils/widget.utils.dart';
 import 'package:flutter_dev/view/account/account_icon_page.dart';
+import 'package:flutter_dev/view/start_up/auth_error.dart';
 import 'package:flutter_dev/view/start_up/check_email_page.dart';
 
 import '../../validator/max_length_validator.dart';
@@ -214,6 +216,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         result.user!.sendEmailVerification();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CheckEmailPage(email: _email, pass: _password,)));
                       }
+                    } else if(result != FirebaseAuthResultStatus.Successful) {
+                      final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);
+                      showDialog<void>(
+                        context: context,
+                        builder: (_) {
+                          return ErrorDialog(message: errorMessage);
+                        }
+                      );
                     }
                   }
                 },

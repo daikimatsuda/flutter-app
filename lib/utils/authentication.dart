@@ -14,8 +14,9 @@ class Authentication {
       UserCredential newAccount = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       return newAccount;
     } on FirebaseAuthException catch(e) {
-      print('登録エラー: $e');
-      return false;
+      FirebaseAuthResultStatus _result;
+      _result = FirebaseAuthExceptionHandler.handleException(e);
+      return _result;
     }
   }
 

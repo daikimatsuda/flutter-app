@@ -34,7 +34,7 @@ class FirebaseAuthExceptionHandler {
       case 'too-many-requests':
         result = FirebaseAuthResultStatus.TooManyRequests;
         break;
-      case 'email-already-exists':
+      case 'email-already-in-use':
         result = FirebaseAuthResultStatus.EmailAlreadyExists;
         break;
       default:

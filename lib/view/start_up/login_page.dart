@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/component/error_dailog.dart';
+import 'package:flutter_dev/constant/strings.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
-// import 'package:flutter_dev/view/account/account_page.dart';
 import 'package:flutter_dev/view/account/create_account_page.dart';
 import 'package:flutter_dev/view/screen.dart';
 import 'package:flutter_dev/view/start_up/auth_error.dart';
@@ -80,7 +80,12 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
                         }
                       } else {
-                        print('メール認証できていません');
+                        showDialog<void>(
+                            context: context,
+                            builder: (_) {
+                              return const ErrorDialog(message: Strings.emailVerificationMsg);
+                            }
+                        );
                       }
                     } else if (result != FirebaseAuthResultStatus.Successful) {
                       final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);

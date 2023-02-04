@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/constant/jobs.dart';
+import 'package:flutter_dev/constant/strings.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
@@ -23,8 +23,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
   TextEditingController userIdController = TextEditingController();
   TextEditingController selfIntroductionController = TextEditingController();
   String? iconPath;
-  var selectedValue = "営業";
-  final lists = <String>["営業", "エンジニア", "総務", "経理", "建設業"];
+  var selectedValue = "1";
+  final jobs = Jobs.jobs;
 
   String getImage() {
     if(iconPath == null) {
@@ -46,10 +46,10 @@ class _EditAccountPageState extends State<EditAccountPage> {
     showDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        content: Text("更新が完了しました。"),
+        content: const Text(Strings.updateCompleteMsg),
         actions: [
           CupertinoDialogAction(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -60,13 +60,13 @@ class _EditAccountPageState extends State<EditAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetUtils.createAppBar('プロフィール編集'),
+      appBar: WidgetUtils.createAppBar('プロフィール編集',true),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
           child: Column(
             children: [
-              SizedBox(height: 30),
+              SizedBox(height: 20),
               GestureDetector(
                 onTap: () async{
                   var result = await Navigator.push(
@@ -113,23 +113,31 @@ class _EditAccountPageState extends State<EditAccountPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Container(
                   width: 300,
-                  child: DropdownButton<String>(
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: '職業',
+                    ),
+                    isExpanded: true,
+                    menuMaxHeight: 400,
                     value: selectedValue,
-                    items: lists.map((String list) =>
-                      DropdownMenuItem(value: list, child: Text(list)))
-                        .toList(),
-                    onChanged: (String? value) {
-                      setState((){
-                        selectedValue = value!;
+                    items: Jobs.jobs.entries.map((entry) {
+                      return DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value)
+                      );
+                    }).toList(),
+                    onChanged: (String? aaa) {
+                      setState(() {
+                        selectedValue = aaa!;
                       });
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
               ElevatedButton(
                   onPressed: () async {
                     if(nameController.text.isNotEmpty
@@ -159,7 +167,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                   },
                   child: Text('更新')
               ),
-              SizedBox(height: 50),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Authentication.signOut();

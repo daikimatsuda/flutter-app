@@ -111,7 +111,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetUtils.createAppBar('新規登録'),
+      appBar: WidgetUtils.createAppBar('新規登録',true),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,

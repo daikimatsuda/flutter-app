@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dev/component/custom_text_form.dart';
 import 'package:flutter_dev/component/error_dailog.dart';
+import 'package:flutter_dev/constant/character.dart';
+import 'package:flutter_dev/constant/jobs.dart';
 import 'package:flutter_dev/model/account.dart';
 import 'package:flutter_dev/utils/authentication.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
@@ -31,12 +31,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String _email = '';
   String _password = '';
   String? iconPath;
+  String? _selectedJobValue;
+  String? _selectedCharacterValue;
   /// 入力エラー有無
   bool _isValidName = false;
   bool _isValidUserId = false;
   bool _isValidSelfIntrodution = false;
   bool _isValidEmail = false;
   bool _isValidPassword = false;
+
+  // @override
+  // void initState() {
+  //   _selectedJobValue = "";
+  //   _selectedCharacterValue = "";
+  // }
 
   /// フィールド状態管理
   void _setName(String name) {
@@ -113,7 +121,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     return Scaffold(
       appBar: WidgetUtils.createAppBar('新規登録',true),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
@@ -139,7 +147,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   child: const Icon(Icons.add),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: CustomTextField(
                   label: '名前',
@@ -153,7 +161,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Container(
+                child: SizedBox(
                   width: 300,
                   child: CustomTextField(
                     label: 'ユーザーID',
@@ -166,7 +174,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: CustomTextField(
                   label: '自己紹介',
@@ -180,7 +188,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Container(
+                child: SizedBox(
                   width: 300,
                   child: CustomTextField(
                     label: 'メールアドレス',
@@ -193,7 +201,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   )
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: CustomTextField(
                   label: 'パスワード',
@@ -204,6 +212,50 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ],
                   setIsValid: _setIsValidPassword,
                 )
+              ),
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                      label: Text('職業', style: TextStyle(color: Colors.grey)),
+                  ),
+                  isExpanded: true,
+                  menuMaxHeight: 400,
+                  value: _selectedJobValue,
+                  items: Jobs.jobs.entries.map((entry) {
+                    return DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value)
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedJobValue = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    label: Text('性格', style: TextStyle(color: Colors.grey)),
+                  ),
+                  isExpanded: true,
+                  menuMaxHeight: 400,
+                  value: _selectedCharacterValue,
+                  items: Character.character.entries.map((entry) {
+                    return DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value)
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedCharacterValue = value!;
+                    });
+                  },
+                ),
               ),
               const SizedBox(height: 50),
               ElevatedButton(
@@ -243,6 +295,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       imagePath: FunctionUtils.getIconId(iconPath!),
       selfIntroduction: _selfIntroduction,
       userId: _userId,
+      jobId: _selectedJobValue,
+      characterId: _selectedCharacterValue,
     );
     var _result = await UserFirestore.setUser(newAccount);
     return _result;

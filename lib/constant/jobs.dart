@@ -1,6 +1,6 @@
 class Jobs {
 
-  static final jobs = {
+  static final Map<String,String> jobs = {
     '1' : '営業',
     '2' : '事務',
     '3' : '人事・総務',

@@ -6,6 +6,8 @@ class Account {
   String imagePath;
   String selfIntroduction;
   String userId;
+  String? jobId;
+  String? characterId;
   Timestamp? createTime;
   Timestamp? updateTime;
 
@@ -15,6 +17,8 @@ class Account {
     this.imagePath = '',
     this.selfIntroduction = '',
     this.userId = '',
+    this.jobId = '',
+    this.characterId = '',
     this.createTime,
     this.updateTime,
   });

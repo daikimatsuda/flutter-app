@@ -27,7 +27,7 @@ class PrivateChatListPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/koen_background.png'),
+              image: AssetImage('images/正式背景2.jpg'),
               fit: BoxFit.fill,
             )
         ),

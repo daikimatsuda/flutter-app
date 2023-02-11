@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dev/constant/character.dart';
 import 'package:flutter_dev/constant/jobs.dart';
 import 'package:flutter_dev/constant/strings.dart';
 import 'package:flutter_dev/model/account.dart';
@@ -23,8 +24,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
   TextEditingController userIdController = TextEditingController();
   TextEditingController selfIntroductionController = TextEditingController();
   String? iconPath;
-  var selectedValue = "1";
-  final jobs = Jobs.jobs;
+  String? _selectedJobValue;
+  String? _selectedCharacterValue;
 
   String getImage() {
     if(iconPath == null) {
@@ -40,6 +41,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
     nameController = TextEditingController(text: myAccount.name);
     userIdController = TextEditingController(text: myAccount.userId);
     selfIntroductionController = TextEditingController(text:  myAccount.selfIntroduction);
+    _selectedJobValue = myAccount.jobId;
+    _selectedCharacterValue = myAccount.characterId;
   }
 
   _myDialog() {
@@ -62,11 +65,11 @@ class _EditAccountPageState extends State<EditAccountPage> {
     return Scaffold(
       appBar: WidgetUtils.createAppBar('プロフィール編集',true),
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () async{
                   var result = await Navigator.push(
@@ -85,36 +88,36 @@ class _EditAccountPageState extends State<EditAccountPage> {
                   backgroundColor: Colors.white,
                   foregroundImage: AssetImage(getImage()),
                   radius: 40,
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: TextField(
                   controller: nameController,
-                  decoration: InputDecoration(hintText: '名前'),
+                  decoration: const InputDecoration(hintText: '名前'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Container(
+                child: SizedBox(
                   width: 300,
                   child: TextField(
                     controller: userIdController,
-                    decoration: InputDecoration(hintText: 'ユーザーID'),
+                    decoration: const InputDecoration(hintText: 'ユーザーID'),
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 300,
                 child: TextField(
                   controller: selfIntroductionController,
-                  decoration: InputDecoration(hintText: '自己紹介'),
+                  decoration: const InputDecoration(hintText: '自己紹介'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Container(
+                child: SizedBox(
                   width: 300,
                   child: DropdownButtonFormField<String>(
                     decoration: const InputDecoration(
@@ -122,19 +125,41 @@ class _EditAccountPageState extends State<EditAccountPage> {
                     ),
                     isExpanded: true,
                     menuMaxHeight: 400,
-                    value: selectedValue,
+                    value: _selectedJobValue,
                     items: Jobs.jobs.entries.map((entry) {
                       return DropdownMenuItem(
                         value: entry.key,
                         child: Text(entry.value)
                       );
                     }).toList(),
-                    onChanged: (String? aaa) {
+                    onChanged: (String? value) {
                       setState(() {
-                        selectedValue = aaa!;
+                        _selectedJobValue = value;
                       });
                     },
                   ),
+                ),
+              ),
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: '性格',
+                  ),
+                  isExpanded: true,
+                  menuMaxHeight: 400,
+                  value: _selectedCharacterValue,
+                  items: Character.character.entries.map((entry) {
+                    return DropdownMenuItem(
+                      value: entry.key,
+                      child: Text(entry.value)
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedCharacterValue = value!;
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -156,6 +181,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
                         name: nameController.text,
                         userId: userIdController.text,
                         selfIntroduction: selfIntroductionController.text,
+                        jobId: _selectedJobValue,
+                        characterId: _selectedCharacterValue,
                         imagePath: imagePath,
                       );
                       Authentication.myAccount = updateAccount;
@@ -165,9 +192,9 @@ class _EditAccountPageState extends State<EditAccountPage> {
                       }
                     }
                   },
-                  child: Text('更新')
+                  child: const Text('更新')
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Authentication.signOut();
@@ -177,10 +204,10 @@ class _EditAccountPageState extends State<EditAccountPage> {
                   Navigator.pushReplacement(context, MaterialPageRoute(
                       builder: (context) => const LoginPage()));
                 },
-                child: Text('ログアウト')
+                child: const Text('ログアウト')
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.red),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () {
                   UserFirestore.deleteUser(myAccount.id);
                   Authentication.deleteAuth();
@@ -190,7 +217,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                   Navigator.pushReplacement(context, MaterialPageRoute(
                       builder: (context) => const LoginPage()));
                 },
-                child: Text('アカウント削除')
+                child: const Text('アカウント削除')
               )
             ],
           ),

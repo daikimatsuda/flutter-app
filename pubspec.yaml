@@ -43,7 +43,9 @@ dependencies:
   like_button: ^2.0.4
   flutter_hooks: ^0.18.2+1
   flutter_chat_ui: ^1.6.4
-  provider: ^6.0.3
+#  provider: ^6.0.3
+  badges: ^3.0.2
+  flutter_riverpod: ^1.0.4
 
 dev_dependencies:
   flutter_test:

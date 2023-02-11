@@ -28,7 +28,7 @@ class TimeLinePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/koen_background2.jpg'),
+            image: AssetImage('images/正式背景2.jpg'),
               fit: BoxFit.fill,
           )
         ),

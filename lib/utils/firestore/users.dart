@@ -14,6 +14,8 @@ class UserFirestore {
         'user_id':newAccount.userId,
         'self_introduction': newAccount.selfIntroduction,
         'image_path':newAccount.imagePath,
+        'job_id':newAccount.jobId,
+        'character_id':newAccount.characterId,
         'create_time':Timestamp.now(),
         'update_time':Timestamp.now(),
       });
@@ -35,6 +37,8 @@ class UserFirestore {
         userId: data['user_id'],
         selfIntroduction: data['self_introduction'],
         imagePath: data['image_path'],
+        jobId: data['job_id'],
+        characterId: data['character_id'],
         createTime: data['create_time'],
         updateTime: data['update_time'],
       );
@@ -54,6 +58,8 @@ class UserFirestore {
         'image_path': updateAccount.imagePath,
         'user_id': updateAccount.userId,
         'self_introduction': updateAccount.selfIntroduction,
+        'job_id':updateAccount.jobId,
+        'character_id':updateAccount.characterId,
         'update_time': Timestamp.now(),
       });
       print('更新完了');

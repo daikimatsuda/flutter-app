@@ -4,22 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dev/utils/firestore/users.dart';
 import 'package:flutter_dev/view/screen.dart';
 import 'package:flutter_dev/view/start_up/login_page.dart';
-import 'package:flutter_dev/view/time_line/time_line_page.dart';
-// import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    // options: const FirebaseOptions(
-    //     apiKey: "AIzaSyDi0ABaWYJBc9LlRbmg9wyAzTKFM5fBcos",
-    //     authDomain: "koen-96970.firebaseapp.com",
-    //     projectId: "koen-96970",
-    //     storageBucket: "koen-96970.appspot.com",
-    //     messagingSenderId: "945225503123",
-    //     appId: "1:945225503123:web:595331813f032cd2599866",
-    //     measurementId: "G-5KBYSKMTDD"
-    // )
-  );
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -49,5 +37,6 @@ class MyApp extends StatelessWidget {
         return LoginPage();
       },
     ),
+    debugShowCheckedModeBanner: false,
   );
 }

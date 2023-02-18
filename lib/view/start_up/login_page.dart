@@ -25,12 +25,18 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/正式背景2.jpg'),
+              fit: BoxFit.fill,
+            )
+          ),
           width: double.infinity,
           child: SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(height: 50,),
-                const Text('koen SNS', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+                const Text('オルタナ', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Container(

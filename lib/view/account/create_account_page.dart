@@ -13,6 +13,7 @@ import 'package:flutter_dev/view/account/account_icon_page.dart';
 import 'package:flutter_dev/view/start_up/auth_error.dart';
 import 'package:flutter_dev/view/start_up/check_email_page.dart';
 
+import '../../component/webview_widget.dart';
 import '../../validator/max_length_validator.dart';
 import '../../validator/required_validator.dart';
 
@@ -33,6 +34,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String? iconPath;
   String? _selectedJobValue;
   String? _selectedCharacterValue;
+  bool _isCheck = false;
+
   /// 入力エラー有無
   bool _isValidName = false;
   bool _isValidUserId = false;
@@ -45,6 +48,12 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   //   _selectedJobValue = "";
   //   _selectedCharacterValue = "";
   // }
+
+  void _handleCheckbox(bool? isCheck) {
+    setState(() {
+      _isCheck = isCheck!;
+    });
+  }
 
   /// フィールド状態管理
   void _setName(String name) {
@@ -257,9 +266,39 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   },
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Checkbox(
+                    activeColor: Colors.blueAccent,
+                    value: _isCheck,
+                    onChanged: _handleCheckbox,
+                  ),
+                  Text("利用規約に同意する"),
+                  const Divider(height: 0)
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => WebViewWidget(
+                      title: "利用規約",
+                      url: "https://engineer-baton.com/?p=386",
+                    )
+                  ));
+                },
+                child: const Text(
+                  "利用規約",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(_isCheck ? Colors.blueAccent : Colors.grey)
+                ),
+                onPressed: !_isCheck ? null : () async {
                   if(_isAllValid() && iconPath != null) {
                     var result = await Authentication.signUp(email: _email, password: _password);
                     if(result is UserCredential) {
@@ -280,7 +319,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   }
                 },
                 child: const Text('アカウントを作成')
-              )
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

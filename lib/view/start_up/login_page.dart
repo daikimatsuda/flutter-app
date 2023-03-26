@@ -27,85 +27,83 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/正式背景2.jpg'),
+              image: AssetImage('images/koen_background.png'),
               fit: BoxFit.fill,
             )
           ),
           width: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 50,),
-                const Text('オルタナ', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Container(
-                    width: 300,
-                    child: TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        hintText: 'メールアドレス'
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
+          child: Column(
+            children: [
+              const SizedBox(height: 50,),
+              const Text('オルタナ', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Container(
                   width: 300,
-                  child: TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
+                  child: TextField(
+                    controller: emailController,
                     decoration: const InputDecoration(
-                        hintText: 'パスワード'
+                      hintText: 'メールアドレス'
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(color: Colors.white70),
-                    children: [
-                      const TextSpan(text: 'アカウントを作成していない方は'),
-                      TextSpan(text: 'こちら',
-                        style: const TextStyle(color: Colors.blue),
-                        recognizer: TapGestureRecognizer()..onTap = () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccountPage()));
-                        }
-                      ),
-                    ]
-                  )
+              ),
+              Container(
+                width: 300,
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                      hintText: 'パスワード'
+                  ),
                 ),
-                const SizedBox(height: 60),
-                ElevatedButton(
-                  onPressed: () async{
-                    var result = await Authentication.emailSignIn(email: emailController.text, password: passwordController.text);
-                    if(result is UserCredential) {
-                      if(result.user!.emailVerified == true) {
-                        // ログイン成功した場合、ユーザー情報をFirebaseから取得
-                        var _result = await UserFirestore.getUser(result.user!.uid);
-                        if(_result == true) {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
-                        }
-                      } else {
-                        showDialog<void>(
-                            context: context,
-                            builder: (_) {
-                              return const ErrorDialog(message: Strings.emailVerificationMsg);
-                            }
-                        );
+              ),
+              const SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  style: const TextStyle(color: Colors.white70),
+                  children: [
+                    const TextSpan(text: 'アカウントを作成していない方は'),
+                    TextSpan(text: 'こちら',
+                      style: const TextStyle(color: Colors.blue),
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccountPage()));
                       }
-                    } else if (result != FirebaseAuthResultStatus.Successful) {
-                      final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);
+                    ),
+                  ]
+                )
+              ),
+              const SizedBox(height: 60),
+              ElevatedButton(
+                onPressed: () async{
+                  var result = await Authentication.emailSignIn(email: emailController.text, password: passwordController.text);
+                  if(result is UserCredential) {
+                    if(result.user!.emailVerified == true) {
+                      // ログイン成功した場合、ユーザー情報をFirebaseから取得
+                      var _result = await UserFirestore.getUser(result.user!.uid);
+                      if(_result == true) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Screen()));
+                      }
+                    } else {
                       showDialog<void>(
                           context: context,
                           builder: (_) {
-                            return ErrorDialog(message: errorMessage);
+                            return const ErrorDialog(message: Strings.emailVerificationMsg);
                           }
                       );
                     }
-                  }, child: const Text('emailでログイン')
-                ),
-              ],
-            ),
+                  } else if (result != FirebaseAuthResultStatus.Successful) {
+                    final errorMessage = FirebaseAuthExceptionHandler.exceptionMessage(result);
+                    showDialog<void>(
+                        context: context,
+                        builder: (_) {
+                          return ErrorDialog(message: errorMessage);
+                        }
+                    );
+                  }
+                }, child: const Text('emailでログイン')
+              ),
+            ],
           ),
         ),
       ),
